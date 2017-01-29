@@ -27,7 +27,7 @@ GM_config.init('Flatmates Plus Options', {
   },
   'whitelist':
   {
-    'label': 'Descriprions Whitelist',
+    'label': 'Descriptions Whitelist',
     'type': 'text',
     'default': 'unlimited-internet'
   }
