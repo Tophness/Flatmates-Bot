@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Flatmates Plus
 // @namespace   flatmatesplus
-// @include     https://flatmates.com.au/share-houses/sydney/cheapest+males+max-260+private-room+unfurnished
+// @include     https://flatmates.com.au/share-houses/*
 // @require https://greasyfork.org/scripts/6217-gm-config/code/GM_config.js?version=23537
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js
 // @grant   GM_getValue
