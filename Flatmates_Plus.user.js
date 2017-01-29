@@ -35,7 +35,7 @@ GM_config.init('Flatmates Plus Options', {
 function opengmcf() {
   GM_config.open();
 }
-GM_registerMenuCommand('Gumtree Plus Options', opengmcf);
+GM_registerMenuCommand('Flatmates Plus Options', opengmcf);
 
 
 function findProp(listing, prop, whiteblack, listingel){
