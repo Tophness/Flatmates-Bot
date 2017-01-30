@@ -27,30 +27,33 @@ GM_config.init('Flatmates Plus Options', {
   },
   'whitelist':
   {
-    'label': 'Descriptions Whitelist',
+    'label': 'Descriprions Whitelist',
     'type': 'text',
     'default': 'unlimited-internet'
+  },
+  'homeaddress':
+  {
+    'label': 'Work Address (For distance calculating)',
+    'type': 'text',
+    'default': 'Central Station, Sydney, NSW'
   }
 });
 function opengmcf() {
   GM_config.open();
 }
 GM_registerMenuCommand('Flatmates Plus Options', opengmcf);
-
-
-function findProp(listing, prop, whiteblack, listingel){
-      if (listing.indexOf(prop) != - 1) {
-        if(whiteblack == 0){
-          listingel.parentNode.removeChild(listingel);
-        }
-      }
-      else {
-        if(whiteblack == 1){
-          listingel.parentNode.removeChild(listingel);
-        }
-      }
+function findProp(listing, prop, whiteblack, listingel) {
+  if (listing.indexOf(prop) != - 1) {
+    if (whiteblack == 0) {
+      listingel.parentNode.removeChild(listingel);
+    }
+  } 
+  else {
+    if (whiteblack == 1) {
+      listingel.parentNode.removeChild(listingel);
+    }
+  }
 }
-
 var stream = document.querySelector('div[data-react-class^="ListingResults"]');
 function searchProp(id, prop, whiteblack, listingel) {
   if (stream) {
@@ -60,67 +63,62 @@ function searchProp(id, prop, whiteblack, listingel) {
       var listing = arr.substring(findid);
       listing = listing.substring(0, arr.indexOf('},{'));
       return findProp(listing, prop, whiteblack, listingel);
-    }
-    else{
-      ajaxsubmit("https://flatmates.com.au/P" + id, id, prop, whiteblack, listingel);
+    } 
+    else {
+      ajaxsubmit('https://flatmates.com.au/P' + id, id, prop, whiteblack, listingel);
     }
   }
 }
-
 function unescapeHtml(safe) {
-    return safe.replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#039;/g, "'");
-}
-
-//function unescapeHtml(safe) {
+  return safe.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, '\'');
+} //function unescapeHtml(safe) {
 //    return $('<div />').html(safe).text();
 //}
 
-function findPropAjax(arr, id, prop, whiteblack, listingel){
-    var findid = arr.indexOf('PropertyListing');
-    if (findid != -1) {
-      //var listing = arr.substring(findid);
-      //listing = listing.substring(0, arr.indexOf('modal-placeholder'));
-      //findProp(listing, prop);
-      findProp(unescapeHtml(arr.substring(findid)), prop, whiteblack, listingel);
-    }
+function findPropAjax(arr, id, prop, whiteblack, listingel) {
+  var findid = arr.indexOf('PropertyListing');
+  if (findid != - 1) {
+    //var listing = arr.substring(findid);
+    //listing = listing.substring(0, arr.indexOf('modal-placeholder'));
+    //findProp(listing, prop);
+    findProp(unescapeHtml(arr.substring(findid)), prop, whiteblack, listingel);
+  }
 }
-
 function ajaxsubmit(url, id, prop, whiteblack, listingel)
 {
-	var mygetrequest=new ajaxRequest();
-	mygetrequest.onreadystatechange=function(){
-		if (mygetrequest.readyState==4){
-			if (mygetrequest.status==200){
-				findPropAjax(mygetrequest.responseText, id, prop, whiteblack, listingel);
-			}
-		}
-	}
-	mygetrequest.open("GET", url, true);
-	mygetrequest.send(null);
-}
-
-function ajaxRequest(){
- var activexmodes=["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"];
- if (window.ActiveXObject){
-  for (var i=0; i<activexmodes.length; i++){
-   try{
-    return new ActiveXObject(activexmodes[i]);
-   }
-   catch(e){
-   }
+  var mygetrequest = new ajaxRequest();
+  mygetrequest.onreadystatechange = function () {
+    if (mygetrequest.readyState == 4) {
+      if (mygetrequest.status == 200) {
+        findPropAjax(mygetrequest.responseText, id, prop, whiteblack, listingel);
+      }
+    }
   }
- }
- else if (window.XMLHttpRequest)
+  mygetrequest.open('GET', url, true);
+  mygetrequest.send(null);
+}
+function ajaxRequest() {
+  var activexmodes = [
+    'Msxml2.XMLHTTP',
+    'Microsoft.XMLHTTP'
+  ];
+  if (window.ActiveXObject) {
+    for (var i = 0; i < activexmodes.length; i++) {
+      try {
+        return new ActiveXObject(activexmodes[i]);
+      } 
+      catch (e) {
+      }
+    }
+  } 
+  else if (window.XMLHttpRequest)
   return new XMLHttpRequest();
- else
+   else
   return false;
 }
-
+var i = 0;
 function filter(listingel) {
+  i++;
   var id = listingel.getElementsByClassName('link');
   if (id.length != 0) {
     id = id[0].href.toString();
@@ -129,9 +127,9 @@ function filter(listingel) {
     if (blacklist.length != 0) {
       blacklist = blacklist.split(',');
       for (var i3 = 0; i3 < blacklist.length; i3++) {
-          searchProp(id, blacklist[i3].toLowerCase(), 0, listingel);
+        searchProp(id, blacklist[i3].toLowerCase(), 0, listingel);
       }
-    }
+    } 
     else {
       var whitelist = GM_config.get('whitelist');
       if (whitelist.length != 0) {
@@ -156,12 +154,82 @@ function filter(listingel) {
       filters = filters.split(',');
       for (var i2 = 0; i2 < filters.length; i2++) {
         if (title.indexOf(filters[i2].toLowerCase()) != - 1) {
-          //listingel.innerHTML = "";
           listingel.parentNode.removeChild(listingel);
         }
       }
     }
+    listingel.id = 'listing' + i;
+    gdist(listingel.id, title);
   }
+}
+function gdist(listingel, title) {
+  var etitle = document.createElement('div');
+  etitle.innerHTML = title;
+  etitle.id = 'etitle';
+  etitle.style.visibility = 'hidden';
+  
+  var elistingel = document.createElement('div');
+  elistingel.innerHTML = listingel;
+  elistingel.id = 'elistingel';
+  elistingel.style.visibility = 'hidden';
+  
+  var ehomeaddress = document.createElement('div');
+  ehomeaddress.innerHTML = GM_config.get('homeaddress');
+  ehomeaddress.id = 'ehomeaddress';
+  ehomeaddress.style.visibility = 'hidden';
+  
+  document.body.appendChild(etitle);
+  document.body.appendChild(elistingel);
+  document.body.appendChild(ehomeaddress);
+
+  exec(function () {
+    var el = document.getElementById('elistingel').innerHTML.toString();
+    var or = document.getElementById('ehomeaddress').innerHTML.toString();
+    var des = document.getElementById('etitle').innerHTML.toString();
+    var TransitOptions = {
+      modes: [
+        'TRAIN',
+        'BUS'
+      ]
+    }
+    var service = new google.maps.DistanceMatrixService;
+    service.getDistanceMatrix({
+      origins: [
+        or
+      ],
+      destinations: [
+        des
+      ],
+      travelMode: 'TRANSIT',
+      transitOptions: TransitOptions,
+      unitSystem: google.maps.UnitSystem.METRIC
+    }, function (response, status) {
+      if (status !== 'OK') {
+        console.log('Error was: ' + status);
+      } else {
+        var originList = response.originAddresses;
+        var destinationList = response.destinationAddresses;
+        for (var i = 0; i < originList.length; i++) {
+          var results = response.rows[i].elements;
+          for (var j = 0; j < results.length; j++) {
+            var newdiv = document.createElement('div');
+            newdiv.innerHTML += results[j].duration.text + ' to ' + originList[i] + '<br>';
+            document.getElementById(el).appendChild(newdiv);
+          }
+        }
+      }
+    });
+  });
+   document.body.removeChild(etitle);
+   document.body.removeChild(elistingel);
+   document.body.removeChild(ehomeaddress);
+}
+function exec(fn) {
+  var script = document.createElement('script');
+  script.setAttribute('type', 'application/javascript');
+  script.textContent = '(' + fn + ')();';
+  document.body.appendChild(script); // run the script
+  document.body.removeChild(script); // clean up
 }
 function removeit(id) {
   if (document.getElementById(id)) {
@@ -215,7 +283,7 @@ iframeSelector /* Optional: If set, identifies the iframe to
   } 
   else {
     btargetsFound = false;
-  }  //--- Get the timer-control variable for this selector.
+  } //--- Get the timer-control variable for this selector.
 
   var controlObj = waitForKeyElements.controlObj || {
   };
